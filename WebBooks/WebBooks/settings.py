@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+# Listing 11.6
+# Heroku: Обновление конфигурации базы данных из $DATABASE_URL.
+import dj_database_url
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,15 +26,23 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 #SECRET_KEY = 'django-insecure-vkgnp@lu%w8y2)if1k6r+9^m#(-ee4^fn6p(#wtbj_ks$prg+('
+
+# SECURITY WARNING: don't run with debug turned on in production!
+
+
+# Listing 11.2
+# SECURITY WARNING: keep the secret key used in production secret!
+# SECRET_KEY = 'dhp40_!05cp071e9pd5e5+3_90fev*vq-obx^3^hv8cx0=l#!k'
+
 import os
 
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'cg#p$g+j9tax!#a3cup@1$8obt2_+&k3q+pmu)5%asj6yjpkag')
 
-
-
+# Listing 11.3
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = True
+
 DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
+
 
 
 ALLOWED_HOSTS=\
@@ -54,17 +67,18 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
+    'django.middleware.clickjacking.XFrameOptionsMiddleware'
+   ]
 
 ROOT_URLCONF = 'WebBooks.urls'
 
-import os # new from pathlib import Path
+# import os  # - already imported above # new from pathlib import Path
 ТЕМРLАТЕ_DIR = os.path.join(BASE_DIR, "templates")
 
 
@@ -89,13 +103,17 @@ WSGI_APPLICATION = 'WebBooks.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+# Listing 11.6
+db_from_env = dj_database_url.config(conn_max_age=500)
+# Heroku: Обновление конфигурации базы данных из $DATABASE_URL.
+DATABASES['default'].update(db_from_env)
+
 
 
 # Password validation
@@ -149,3 +167,17 @@ STATICFILES_DIRS= [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/'
+
+
+# Listing 11.7
+# Статичные файлы (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.10/howto/static-files/
+# Абсолютный путь к каталогу, в котором collectstatic
+# будет собирать статические файлы для развертывания.
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+
+# Listing 11.8
+# Упрощенная обработка статическая файлов.
+# https://warehouse.python.org/project/whitenoise/
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
