@@ -1,0 +1,29 @@
+{% extends "base_generic.html" %}
+
+
+
+
+{% block content %}
+  <h1>Список книг в БД</h1>
+  {% if book_list %}
+  <ul>
+      {% for book in book_list %}
+          <li>
+              <!-- <a href="{{ book.get_absolute_url }}"> -->
+              <a href="{{ views.huinana }}">
+               <!--<a href=1>--->
+                  {{ book.title }}
+                 {{ book.get_absolute_url }}</a>
+                        ({{ book.genre }})
+              ({{ views.huinana }})
+
+          </li>
+            <tr><td>{{ book.title }}</td>
+                <td><a href="show_book/{{book.id}}">инфо</a></td> <br>
+            </tr>
+      {% endfor %}
+  </ul>
+  {% else %}
+        <p>В базе данных нет книг</p>
+  {% endif %}
+{% endblock %}
