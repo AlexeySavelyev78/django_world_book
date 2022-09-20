@@ -11,9 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
-# Listing 11.6
-# Heroku: Обновление конфигурации базы данных из $DATABASE_URL.
-import dj_database_url
+
 
 
 
@@ -42,19 +40,16 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'cg#p$g+j9tax!#a3cup@1$8obt2_+&
 # SECURITY WARNING: don't run with debug turned on in production!
 
 DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
+#DEBUG = False
 
 
+ALLOWED_HOSTS = ['127.0.0.1', '.herokuapp.com']
 
-ALLOWED_HOSTS=\
-    [
-        "bla-bla.com", "localyremotehost", "10.97.48.144",
-        "myhost", "localhost", "127.0.0.1",
-        "homehost", "homelhost", "192.168.1.100",
-    ]
 
 # Application definition
 
 INSTALLED_APPS = [
+    'whitenoise.runserver_nostatic',
     'catalog',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -100,6 +95,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'WebBooks.wsgi.application'
 
+# Listing 11.6
+# Heroku: Обновление конфигурации базы данных из $DATABASE_URL.
+import dj_database_url
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
@@ -109,6 +107,18 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+#DATABASES = {
+#    'default': {
+ #       'ENGINE': 'django.db.backends.postgresql_psycopg2',
+  #      'NAME': '<database_name>',
+   #     'USER': '<user_name>',
+    #    'PASSWORD': '<password>',
+     #   'HOST': 'localhost',
+      #  'PORT': '',
+   # }
+#}
+
 # Listing 11.6
 db_from_env = dj_database_url.config(conn_max_age=500)
 # Heroku: Обновление конфигурации базы данных из $DATABASE_URL.
@@ -181,3 +191,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Упрощенная обработка статическая файлов.
 # https://warehouse.python.org/project/whitenoise/
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+WHITENOISE_USE_FINDERS = True

@@ -1,1 +1,1 @@
-web: gunicorn webbook.wsgi --log-file –  
+web: gunicorn django_world_book.wsgi
