@@ -1,1 +1,1 @@
-web: gunicorn alexeysavelyev78.wsgi
+web: gunicorn webbooks.wsgi
